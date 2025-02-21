@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>body{
+  background: #1c1c1e;
+}
+h1, p{
+  color: white;
+  background: #1c1c1e;
+}
+div{
+  padding: 10px;
+  background: #1c1c1e;
+}
+canvas{
+  background: FloralWhite;
+  border: 1px solid DimGray;
+}</style>
+<script>window.AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioContext = new AudioContext();
+let currentBuffer = null;
+
+const drawAudio = (m4a) => {
+  fetch(m4a)
+    .then((response) => response.arrayBuffer())
+    .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
+    .then((audioBuffer) => audioBuffer.getChannelData(0))
+    .then((rawdata) => draw(rawdata));
+};
+
+document.getElementById("Title").innerHTML =
+  "Sphinx of black quartz, judge my vow.";
+
+const normalize = rawdata => {
+  const scaler = 1/Math.max(rawdata);
+  rawdata.map(n => n * scaler)
+};
+
+const draw = (audioBuffer) => {
+  const canvas = document.getElementById("Artwork");
+  const content = canvas.getContext("2d");
+  const padding = 10;
+  content.fillStyle = "pink";
+  content.fillRect(10,10,20,20);
+  content.translate(0,canvas.clientHeight/2);
+  
+  content.beginPath();
+  content.moveTo(0, 0);
+
+  for (let i = 0; i < audioBuffer.length - 1; i++) {
+    const dataX = i*((canvas.clientWidth)/audioBuffer.length);
+    const dataY = audioBuffer[i]*((canvas.clientHeight/2) - padding);
+    content.lineTo(dataX,dataY);
+  }
+  content.lineTo(audioBuffer.length, 0);
+  content.strokeStyle = "red";
+  content.stroke();
+
+};
+
+drawAudio('https://cvws.icloud-content.com/B/AU_NP_4MzwNcLwCOErJNt0G0vkQOAY2fj2YqJ9_CGweyhUojr655MSO3/Sphinx%20of%20black%20quartz,%20judge%20my%20vow..m4a?o=AnQbkV6VWwo6uTj_vQfFJQbz2_hp_K8A7iOnngcAJRXQ&v=1&x=3&a=CAogWoBF-wG6wF1Mj9FA9N33cmnC2XvnCSAWGKDF8HTYkvoSbRDD8_SL0TIYw4Pw39oyIgEAUgS0vkQOWgR5MSO3aiZtDa5U7BR12Hm2dE0ZvAKxu99WkznYLA38HELBfz3J-fjZ4tL1RXImi0uU-WXam0wlvgvszNgFl-53mIMTfnM4sjENdt_sc9kS5bBfM0o&e=1742347174&fl=&r=87CB7FF2-5EF4-496E-9A8E-499A89C4D25F-1&k=PxisRjZkDqIBWMtLImjPrw&ckc=com.apple.clouddocs&ckz=iCloud.is.workflow.my.workflows&p=153&s=LEeJHIaUpUYhGfru8hjh8ZukGg8');</script>
+</head>
+<body>
+<h1 id="Title"></h1>
+<div>
+<canvas id="Artwork">
+</canvas>
+<p id="Data"></p>
+</div>
+</body>
+</html>
