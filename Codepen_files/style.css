@@ -1,0 +1,23 @@
+<style>
+body{
+  background: #1c1c1e;
+}
+h1, p{
+  color: white;
+  background: #1c1c1e;
+}
+div{
+  padding: 10px;
+  background: #1c1c1e;
+  container-type: inline-size;
+}
+canvas{
+  background: FloralWhite;
+  border: 1px solid DimGray;
+}
+@media (resolution = 3dppx){
+  h1{
+    color: lightblue;
+  }
+}
+</style>
